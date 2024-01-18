@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
 
+// middleware
+app.use(express.json());
+
 // phonebook data
 const persons = [
   {
@@ -25,11 +28,13 @@ const persons = [
   },
 ];
 
+const baseUrl = "/api/persons";
+
 app.get("/", (req, res) => {
   res.send("<h1>Hello 👋</h1>");
 });
 
-app.get("/api/persons", (req, res) => {
+app.get(baseUrl, (req, res) => {
   res.json(persons);
 });
 
@@ -39,6 +44,20 @@ app.get("/info", (req, res) => {
   res.send(
     `<p>Phonebook has info for ${personsLength} people</p><p>${currentTime}</p>`
   );
+});
+
+app.get(`${baseUrl}/:id`, (req, res) => {
+  const queryId = req.params.id;
+  const matchingPerson = persons.find((person) => person.id == queryId);
+  if (matchingPerson) {
+    return res
+      .status(200)
+      .json({ matchingPerson, message: "Person data", success: true });
+  } else {
+    return res
+      .status(404)
+      .json({ message: "No person found!", success: false });
+  }
 });
 
 const PORT = 3001;
