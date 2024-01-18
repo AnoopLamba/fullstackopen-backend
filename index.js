@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 
 // phonebook data
-const persons = [
+let persons = [
   {
     id: 1,
     name: "Arto Hellas",
@@ -50,14 +50,18 @@ app.get(`${baseUrl}/:id`, (req, res) => {
   const queryId = req.params.id;
   const matchingPerson = persons.find((person) => person.id == queryId);
   if (matchingPerson) {
-    return res
+    res
       .status(200)
       .json({ matchingPerson, message: "Person data", success: true });
   } else {
-    return res
-      .status(404)
-      .json({ message: "No person found!", success: false });
+    res.status(404).json({ message: "No person found!", success: false });
   }
+});
+
+app.delete(`${baseUrl}/:id`, (req, res) => {
+  const id = req.params.id;
+  persons = persons.map((person) => person.id == id);
+  res.status(204).end();
 });
 
 const PORT = 3001;
