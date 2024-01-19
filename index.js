@@ -66,7 +66,10 @@ app.delete(`${baseUrl}/:id`, (req, res) => {
 });
 
 // to generate random id
-const generateId = () => {};
+const generateId = () => {
+  const maxId = Math.max(...persons.map((person) => person.id));
+  return maxId * Math.random().toFixed(3);
+};
 
 // add new person
 app.post(baseUrl, (req, res) => {
