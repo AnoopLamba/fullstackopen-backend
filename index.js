@@ -58,10 +58,34 @@ app.get(`${baseUrl}/:id`, (req, res) => {
   }
 });
 
+// delete sec
 app.delete(`${baseUrl}/:id`, (req, res) => {
   const id = req.params.id;
   persons = persons.map((person) => person.id == id);
   res.status(204).end();
+});
+
+// to generate random id
+const generateId = () => {};
+
+// add new person
+app.post(baseUrl, (req, res) => {
+  const body = req.body;
+
+  if (!body.name || !body.number) {
+    return res
+      .status(404)
+      .json({ message: "body or number is missing!", success: false });
+  }
+
+  const person = {
+    id: generateId(),
+    name: body.name,
+    number: body.number,
+  };
+
+  persons = persons.concat(person);
+  res.status(200).json({ person, message: "Person data", success: true });
 });
 
 const PORT = 3001;
