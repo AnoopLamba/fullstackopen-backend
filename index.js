@@ -1,8 +1,12 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 
 // middleware
 app.use(express.json());
+
+// morgan middleware
+app.use(morgan("dev"));
 
 // phonebook data
 let persons = [
@@ -90,6 +94,14 @@ app.post(baseUrl, (req, res) => {
   persons = persons.concat(person);
   res.status(200).json({ person, message: "Person data", success: true });
 });
+
+// another middleware to handle requests made to non-existing routes
+const unknownEndpoint = (req, res, next) => {
+  res.status(404).send({ error: "unknown endpoint" });
+};
+
+// using the above middleware
+app.use(unknownEndpoint);
 
 const PORT = 3001;
 app.listen(PORT, () => {
