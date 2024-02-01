@@ -5,8 +5,20 @@ const app = express();
 // middleware
 app.use(express.json());
 
+// custom morgan format
+function customMorganFormat(tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    JSON.stringify(req.body),
+    tokens["response-time"](req, res),
+    "ms",
+  ].join(" ");
+}
+
 // morgan middleware
-app.use(morgan("dev"));
+app.use(morgan(customMorganFormat));
 
 // phonebook data
 let persons = [
